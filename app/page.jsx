@@ -6,6 +6,7 @@ export default function AdminLeaveTracker() {
   const [form, setForm] = useState({
     date: "",
     excessADEarned: "",
+    excessADUsed: "",
     electionsEarned: "",
     electionsUsed: "",
     hurricaneADEarned: "",
@@ -23,49 +24,39 @@ export default function AdminLeaveTracker() {
     localStorage.setItem("adminLeaveEntries", JSON.stringify(entries));
   }, [entries]);
 
-  const calculateBalances = ({ electionsEarned, electionsUsed, hurricaneADEarned, hurricaneUsed, excessADEarned }) => {
-  const electionsBalance = parseFloat(electionsEarned) || 0;
-  const electionsUsedBalance = parseFloat(electionsUsed) || 0;
-  const hurricaneBalance = parseFloat(hurricaneADEarned) || 0;
-  const hurricaneUsedBalance = parseFloat(hurricaneUsed) || 0;
-  const excessBalance = parseFloat(excessADEarned) || 0;
+  const calculateBalances = ({ electionsEarned, electionsUsed, hurricaneADEarned, hurricaneUsed, excessADEarned, excessADUsed }) => {
+    const electionsBalance = (parseFloat(electionsEarned) || 0) - (parseFloat(electionsUsed) || 0);
+    const hurricaneBalance = (parseFloat(hurricaneADEarned) || 0) - (parseFloat(hurricaneUsed) || 0);
+    const excessBalance = (parseFloat(excessADEarned) || 0) - (parseFloat(excessADUsed) || 0);
+    const totalBalance = electionsBalance + hurricaneBalance + excessBalance;
 
-  const totalBalance = (electionsBalance - electionsUsedBalance) + (hurricaneBalance - hurricaneUsedBalance) + excessBalance;
-
-  return {
-    electionsBalance: electionsBalance - electionsUsedBalance,
-    hurricaneBalance: hurricaneBalance - hurricaneUsedBalance,
-    totalBalance
-  };
-};
-
-};
-
+    return { electionsBalance, hurricaneBalance, excessBalance, totalBalance };
   };
 
   const handleSubmit = () => {
-  const cleanedForm = {
-    date: form.date,
-    excessADEarned: parseFloat(form.excessADEarned) || 0,
-    electionsEarned: parseFloat(form.electionsEarned) || 0,
-    electionsUsed: parseFloat(form.electionsUsed) || 0,
-    hurricaneADEarned: parseFloat(form.hurricaneADEarned) || 0,
-    hurricaneUsed: parseFloat(form.hurricaneUsed) || 0
+    const cleanedForm = {
+      date: form.date,
+      excessADEarned: parseFloat(form.excessADEarned) || 0,
+      excessADUsed: parseFloat(form.excessADUsed) || 0,
+      electionsEarned: parseFloat(form.electionsEarned) || 0,
+      electionsUsed: parseFloat(form.electionsUsed) || 0,
+      hurricaneADEarned: parseFloat(form.hurricaneADEarned) || 0,
+      hurricaneUsed: parseFloat(form.hurricaneUsed) || 0
+    };
+
+    const balances = calculateBalances(cleanedForm);
+    setEntries([...entries, { ...cleanedForm, ...balances }]);
+
+    setForm({
+      date: "",
+      excessADEarned: "",
+      excessADUsed: "",
+      electionsEarned: "",
+      electionsUsed: "",
+      hurricaneADEarned: "",
+      hurricaneUsed: ""
+    });
   };
-
-  const balances = calculateBalances(cleanedForm);
-  setEntries([...entries, { ...cleanedForm, ...balances }]);
-
-  setForm({
-    date: "",
-    excessADEarned: "",
-    electionsEarned: "",
-    electionsUsed: "",
-    hurricaneADEarned: "",
-    hurricaneUsed: ""
-  });
-};
-
 
   const handleDelete = (index) => {
     const newEntries = [...entries];
@@ -102,23 +93,33 @@ export default function AdminLeaveTracker() {
           </div>
         </div>
 
-        <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", marginBottom: "1rem" }}>
-          Add Administrative Leave Entry
-        </h2>
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", marginBottom: "0.25rem" }}>Date</label>
+          <input
+            type="text"
+            value={form.date}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
+            style={{
+              padding: "0.5rem",
+              width: "100%",
+              border: "1px solid #ccc",
+              borderRadius: "4px"
+            }}
+          />
+        </div>
+
+        <h3 style={{ marginTop: "1rem" }}>➕ Hours Earned</h3>
         {[
-          { label: "Date", key: "date" },
           { label: "Excess Hours AD Earned", key: "excessADEarned" },
           { label: "Elections Earned", key: "electionsEarned" },
-          { label: "Elections Used", key: "electionsUsed" },
-          { label: "Hurricane AD Earned", key: "hurricaneADEarned" },
-          { label: "Hurricane Used", key: "hurricaneUsed" }
+          { label: "Hurricane AD Earned", key: "hurricaneADEarned" }
         ].map(({ label, key }) => (
           <div key={key} style={{ marginBottom: "1rem" }}>
             <label style={{ display: "block", marginBottom: "0.25rem" }}>{label}</label>
             <input
-              type={key === "date" ? "text" : "number"}
+              type="number"
               step="0.01"
-              inputMode={key === "date" ? "text" : "decimal"}
+              inputMode="decimal"
               value={form[key]}
               onChange={(e) => setForm({ ...form, [key]: e.target.value })}
               style={{
@@ -130,6 +131,31 @@ export default function AdminLeaveTracker() {
             />
           </div>
         ))}
+
+        <h3 style={{ marginTop: "1rem" }}>➖ Hours Used</h3>
+        {[
+          { label: "Excess Hours AD Used", key: "excessADUsed" },
+          { label: "Elections Used", key: "electionsUsed" },
+          { label: "Hurricane Used", key: "hurricaneUsed" }
+        ].map(({ label, key }) => (
+          <div key={key} style={{ marginBottom: "1rem" }}>
+            <label style={{ display: "block", marginBottom: "0.25rem" }}>{label}</label>
+            <input
+              type="number"
+              step="0.01"
+              inputMode="decimal"
+              value={form[key]}
+              onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+              style={{
+                padding: "0.5rem",
+                width: "100%",
+                border: "1px solid #ccc",
+                borderRadius: "4px"
+              }}
+            />
+          </div>
+        ))}
+
         <button
           onClick={handleSubmit}
           style={{
@@ -162,7 +188,7 @@ export default function AdminLeaveTracker() {
                 backgroundColor: "#f9f9f9"
               }}>
                 <p><strong>Date:</strong> {entry.date}</p>
-                <p><strong>Excess AD Earned:</strong> {entry.excessADEarned}</p>
+                <p><strong>Excess Balance:</strong> {entry.excessBalance}</p>
                 <p><strong>Elections Balance:</strong> {entry.electionsBalance}</p>
                 <p><strong>Hurricane Balance:</strong> {entry.hurricaneBalance}</p>
                 <p><strong>Total Balance:</strong> {entry.totalBalance}</p>
