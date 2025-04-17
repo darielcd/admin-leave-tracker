@@ -1,12 +1,10 @@
 "use client";
-
 import { useState } from "react";
 
 export default function AdminLeaveTracker() {
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({
     date: "",
-    excessHours: "",
     excessADEarned: "",
     electionsEarned: "",
     electionsUsed: "",
@@ -26,7 +24,6 @@ export default function AdminLeaveTracker() {
     setEntries([...entries, { ...form, ...balances }]);
     setForm({
       date: "",
-      excessHours: "",
       excessADEarned: "",
       electionsEarned: "",
       electionsUsed: "",
@@ -35,6 +32,8 @@ export default function AdminLeaveTracker() {
     });
   };
 
+  const totalBalanceSum = entries.reduce((sum, e) => sum + (e.totalBalance || 0), 0);
+
   return (
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1rem" }}>
@@ -42,7 +41,6 @@ export default function AdminLeaveTracker() {
       </h2>
       {[
         { label: "Date", key: "date" },
-        { label: "Excess Hours Worked", key: "excessHours" },
         { label: "Excess Hours AD Earned", key: "excessADEarned" },
         { label: "Elections Earned", key: "electionsEarned" },
         { label: "Elections Used", key: "electionsUsed" },
@@ -81,7 +79,6 @@ export default function AdminLeaveTracker() {
           {entries.map((entry, index) => (
             <li key={index} style={{ marginBottom: "1rem", border: "1px solid #ddd", padding: "1rem" }}>
               <p><strong>Date:</strong> {entry.date}</p>
-              <p><strong>Excess Hours:</strong> {entry.excessHours}</p>
               <p><strong>Excess AD Earned:</strong> {entry.excessADEarned}</p>
               <p><strong>Elections Balance:</strong> {entry.electionsBalance}</p>
               <p><strong>Hurricane Balance:</strong> {entry.hurricaneBalance}</p>
@@ -90,6 +87,10 @@ export default function AdminLeaveTracker() {
           ))}
         </ul>
       )}
+
+      <div style={{ marginTop: "2rem", fontSize: "1.1rem", fontWeight: "bold" }}>
+        ✅ Total Hours Balance Across All Entries: {totalBalanceSum.toFixed(2)}
+      </div>
     </div>
   );
 }
