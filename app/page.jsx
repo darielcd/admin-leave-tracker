@@ -23,11 +23,13 @@ export default function AdminLeaveTracker() {
     localStorage.setItem("adminLeaveEntries", JSON.stringify(entries));
   }, [entries]);
 
-  const calculateBalances = ({ electionsEarned, electionsUsed, hurricaneADEarned, hurricaneUsed }) => {
-    const electionsBalance = (parseFloat(electionsEarned) || 0) - (parseFloat(electionsUsed) || 0);
-    const hurricaneBalance = (parseFloat(hurricaneADEarned) || 0) - (parseFloat(hurricaneUsed) || 0);
-    const totalBalance = parseFloat(electionsBalance + hurricaneBalance);
-    return { electionsBalance, hurricaneBalance, totalBalance };
+  const calculateBalances = ({ electionsEarned, electionsUsed, hurricaneADEarned, hurricaneUsed, excessADEarned }) => {
+  const electionsBalance = (parseFloat(electionsEarned) || 0) - (parseFloat(electionsUsed) || 0);
+  const hurricaneBalance = (parseFloat(hurricaneADEarned) || 0) - (parseFloat(hurricaneUsed) || 0);
+  const totalBalance = electionsBalance + hurricaneBalance + (parseFloat(excessADEarned) || 0);
+  return { electionsBalance, hurricaneBalance, totalBalance };
+};
+
   };
 
   const handleSubmit = () => {
