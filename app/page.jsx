@@ -24,35 +24,48 @@ export default function AdminLeaveTracker() {
   }, [entries]);
 
   const calculateBalances = ({ electionsEarned, electionsUsed, hurricaneADEarned, hurricaneUsed, excessADEarned }) => {
-  const electionsBalance = (parseFloat(electionsEarned) || 0) - (parseFloat(electionsUsed) || 0);
-  const hurricaneBalance = (parseFloat(hurricaneADEarned) || 0) - (parseFloat(hurricaneUsed) || 0);
-  const totalBalance = electionsBalance + hurricaneBalance + (parseFloat(excessADEarned) || 0);
-  return { electionsBalance, hurricaneBalance, totalBalance };
+  const electionsBalance = parseFloat(electionsEarned) || 0;
+  const electionsUsedBalance = parseFloat(electionsUsed) || 0;
+  const hurricaneBalance = parseFloat(hurricaneADEarned) || 0;
+  const hurricaneUsedBalance = parseFloat(hurricaneUsed) || 0;
+  const excessBalance = parseFloat(excessADEarned) || 0;
+
+  const totalBalance = (electionsBalance - electionsUsedBalance) + (hurricaneBalance - hurricaneUsedBalance) + excessBalance;
+
+  return {
+    electionsBalance: electionsBalance - electionsUsedBalance,
+    hurricaneBalance: hurricaneBalance - hurricaneUsedBalance,
+    totalBalance
+  };
+};
+
 };
 
   };
 
   const handleSubmit = () => {
-    const cleanedForm = {
-      ...form,
-      electionsEarned: parseFloat(form.electionsEarned) || 0,
-      electionsUsed: parseFloat(form.electionsUsed) || 0,
-      hurricaneADEarned: parseFloat(form.hurricaneADEarned) || 0,
-      hurricaneUsed: parseFloat(form.hurricaneUsed) || 0,
-      excessADEarned: parseFloat(form.excessADEarned) || 0
-    };
-
-    const balances = calculateBalances(cleanedForm);
-    setEntries([...entries, { ...form, ...balances }]);
-    setForm({
-      date: "",
-      excessADEarned: "",
-      electionsEarned: "",
-      electionsUsed: "",
-      hurricaneADEarned: "",
-      hurricaneUsed: ""
-    });
+  const cleanedForm = {
+    date: form.date,
+    excessADEarned: parseFloat(form.excessADEarned) || 0,
+    electionsEarned: parseFloat(form.electionsEarned) || 0,
+    electionsUsed: parseFloat(form.electionsUsed) || 0,
+    hurricaneADEarned: parseFloat(form.hurricaneADEarned) || 0,
+    hurricaneUsed: parseFloat(form.hurricaneUsed) || 0
   };
+
+  const balances = calculateBalances(cleanedForm);
+  setEntries([...entries, { ...cleanedForm, ...balances }]);
+
+  setForm({
+    date: "",
+    excessADEarned: "",
+    electionsEarned: "",
+    electionsUsed: "",
+    hurricaneADEarned: "",
+    hurricaneUsed: ""
+  });
+};
+
 
   const handleDelete = (index) => {
     const newEntries = [...entries];
