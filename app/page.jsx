@@ -74,7 +74,13 @@ export default function AdminLeaveTracker() {
       gap: "2rem",
       padding: "2rem",
       fontFamily: "sans-serif",
-      flexWrap: "wrap"
+      flexWrap: "wrap",
+      minHeight: "100vh",
+      backgroundColor: "#121212",
+      backgroundImage: "url('/dark-brick-texture.png')",
+      backgroundSize: "auto",
+      backgroundRepeat: "repeat",
+      color: "#f5f5f5"
     }}>
       {/* Left Column - Form */}
       <div style={{ flex: 1, minWidth: "300px" }}>
@@ -85,16 +91,16 @@ export default function AdminLeaveTracker() {
             fontSize: "1.2rem",
             fontWeight: "bold",
             padding: "1rem",
-            backgroundColor: "#dff0d8",
+            backgroundColor: "#1e1e1e",
             borderRadius: "4px",
-            color: "#2c662d"
+            color: "#90ee90"
           }}>
             ✅ Total Hours Balance: {totalBalanceSum.toFixed(2)}
           </div>
         </div>
 
         <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "block", marginBottom: "0.25rem" }}>Date</label>
+          <label>Date</label>
           <input
             type="text"
             value={form.date}
@@ -102,8 +108,10 @@ export default function AdminLeaveTracker() {
             style={{
               padding: "0.5rem",
               width: "100%",
-              border: "1px solid #ccc",
-              borderRadius: "4px"
+              border: "1px solid #444",
+              borderRadius: "4px",
+              backgroundColor: "#222",
+              color: "#fff"
             }}
           />
         </div>
@@ -115,7 +123,7 @@ export default function AdminLeaveTracker() {
           { label: "Hurricane AD Earned", key: "hurricaneADEarned" }
         ].map(({ label, key }) => (
           <div key={key} style={{ marginBottom: "1rem" }}>
-            <label style={{ display: "block", marginBottom: "0.25rem" }}>{label}</label>
+            <label>{label}</label>
             <input
               type="number"
               step="0.01"
@@ -125,8 +133,10 @@ export default function AdminLeaveTracker() {
               style={{
                 padding: "0.5rem",
                 width: "100%",
-                border: "1px solid #ccc",
-                borderRadius: "4px"
+                border: "1px solid #444",
+                borderRadius: "4px",
+                backgroundColor: "#222",
+                color: "#fff"
               }}
             />
           </div>
@@ -139,7 +149,7 @@ export default function AdminLeaveTracker() {
           { label: "Hurricane Used", key: "hurricaneUsed" }
         ].map(({ label, key }) => (
           <div key={key} style={{ marginBottom: "1rem" }}>
-            <label style={{ display: "block", marginBottom: "0.25rem" }}>{label}</label>
+            <label>{label}</label>
             <input
               type="number"
               step="0.01"
@@ -149,8 +159,10 @@ export default function AdminLeaveTracker() {
               style={{
                 padding: "0.5rem",
                 width: "100%",
-                border: "1px solid #ccc",
-                borderRadius: "4px"
+                border: "1px solid #444",
+                borderRadius: "4px",
+                backgroundColor: "#222",
+                color: "#fff"
               }}
             />
           </div>
@@ -182,10 +194,11 @@ export default function AdminLeaveTracker() {
             {entries.map((entry, index) => (
               <li key={index} style={{
                 marginBottom: "1rem",
-                border: "1px solid #ddd",
+                border: "1px solid #444",
                 padding: "1rem",
                 borderRadius: "4px",
-                backgroundColor: "#f9f9f9"
+                backgroundColor: "#1e1e1e",
+                color: "#eee"
               }}>
                 <p><strong>Date:</strong> {entry.date}</p>
                 <p><strong>Excess Balance:</strong> {entry.excessBalance}</p>
