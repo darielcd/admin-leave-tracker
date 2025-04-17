@@ -1,7 +1,5 @@
+"use client";
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 export default function AdminLeaveTracker() {
   const [entries, setEntries] = useState([]);
@@ -37,53 +35,60 @@ export default function AdminLeaveTracker() {
   };
 
   return (
-    <div className="p-4 space-y-6">
-      <Card>
-        <CardContent className="space-y-4 p-4">
-          <h2 className="text-xl font-semibold">Add Administrative Leave Entry</h2>
-          {[
-            { label: "Date", key: "date" },
-            { label: "Excess Hours Worked", key: "excessHours" },
-            { label: "Excess Hours AD Earned", key: "excessADEarned" },
-            { label: "Elections Earned", key: "electionsEarned" },
-            { label: "Elections Used", key: "electionsUsed" },
-            { label: "Hurricane AD Earned", key: "hurricaneADEarned" },
-            { label: "Hurricane Used", key: "hurricaneUsed" }
-          ].map(({ label, key }) => (
-            <div key={key}>
-              <label className="block text-sm font-medium mb-1">{label}</label>
-              <Input
-                type="text"
-                value={form[key]}
-                onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-              />
-            </div>
-          ))}
-          <Button onClick={handleSubmit}>Add Entry</Button>
-        </CardContent>
-      </Card>
+    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1rem" }}>
+        Add Administrative Leave Entry
+      </h2>
+      {[
+        { label: "Date", key: "date" },
+        { label: "Excess Hours Worked", key: "excessHours" },
+        { label: "Excess Hours AD Earned", key: "excessADEarned" },
+        { label: "Elections Earned", key: "electionsEarned" },
+        { label: "Elections Used", key: "electionsUsed" },
+        { label: "Hurricane AD Earned", key: "hurricaneADEarned" },
+        { label: "Hurricane Used", key: "hurricaneUsed" }
+      ].map(({ label, key }) => (
+        <div key={key} style={{ marginBottom: "1rem" }}>
+          <label style={{ display: "block", marginBottom: "0.25rem" }}>{label}</label>
+          <input
+            type="text"
+            value={form[key]}
+            onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+            style={{ padding: "0.5rem", width: "100%", border: "1px solid #ccc", borderRadius: "4px" }}
+          />
+        </div>
+      ))}
+      <button
+        onClick={handleSubmit}
+        style={{
+          padding: "0.75rem 1.5rem",
+          backgroundColor: "#0070f3",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer"
+        }}
+      >
+        Add Entry
+      </button>
 
-      <Card>
-        <CardContent className="p-4">
-          <h2 className="text-xl font-semibold mb-4">Entries</h2>
-          {entries.length === 0 ? (
-            <p>No entries yet.</p>
-          ) : (
-            <div className="space-y-2">
-              {entries.map((entry, index) => (
-                <div key={index} className="border p-2 rounded">
-                  <p><strong>Date:</strong> {entry.date}</p>
-                  <p><strong>Excess Hours:</strong> {entry.excessHours}</p>
-                  <p><strong>Excess AD Earned:</strong> {entry.excessADEarned}</p>
-                  <p><strong>Elections Balance:</strong> {entry.electionsBalance}</p>
-                  <p><strong>Hurricane Balance:</strong> {entry.hurricaneBalance}</p>
-                  <p><strong>Total Balance:</strong> {entry.totalBalance}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <h2 style={{ marginTop: "2rem", fontSize: "1.25rem", fontWeight: "bold" }}>Entries</h2>
+      {entries.length === 0 ? (
+        <p>No entries yet.</p>
+      ) : (
+        <ul>
+          {entries.map((entry, index) => (
+            <li key={index} style={{ marginBottom: "1rem", border: "1px solid #ddd", padding: "1rem" }}>
+              <p><strong>Date:</strong> {entry.date}</p>
+              <p><strong>Excess Hours:</strong> {entry.excessHours}</p>
+              <p><strong>Excess AD Earned:</strong> {entry.excessADEarned}</p>
+              <p><strong>Elections Balance:</strong> {entry.electionsBalance}</p>
+              <p><strong>Hurricane Balance:</strong> {entry.hurricaneBalance}</p>
+              <p><strong>Total Balance:</strong> {entry.totalBalance}</p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
