@@ -12,7 +12,6 @@ export default function AdminLeaveTracker() {
     hurricaneUsed: ""
   });
 
-  // Load entries from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("adminLeaveEntries");
     if (saved) {
@@ -20,7 +19,6 @@ export default function AdminLeaveTracker() {
     }
   }, []);
 
-  // Save to localStorage on update
   useEffect(() => {
     localStorage.setItem("adminLeaveEntries", JSON.stringify(entries));
   }, [entries]);
@@ -33,7 +31,16 @@ export default function AdminLeaveTracker() {
   };
 
   const handleSubmit = () => {
-    const balances = calculateBalances(form);
+    const cleanedForm = {
+      ...form,
+      electionsEarned: parseFloat(form.electionsEarned) || 0,
+      electionsUsed: parseFloat(form.electionsUsed) || 0,
+      hurricaneADEarned: parseFloat(form.hurricaneADEarned) || 0,
+      hurricaneUsed: parseFloat(form.hurricaneUsed) || 0,
+      excessADEarned: parseFloat(form.excessADEarned) || 0
+    };
+
+    const balances = calculateBalances(cleanedForm);
     setEntries([...entries, { ...form, ...balances }]);
     setForm({
       date: "",
@@ -94,8 +101,9 @@ export default function AdminLeaveTracker() {
           <div key={key} style={{ marginBottom: "1rem" }}>
             <label style={{ display: "block", marginBottom: "0.25rem" }}>{label}</label>
             <input
-              type="number"
+              type={key === "date" ? "text" : "number"}
               step="0.01"
+              inputMode={key === "date" ? "text" : "decimal"}
               value={form[key]}
               onChange={(e) => setForm({ ...form, [key]: e.target.value })}
               style={{
