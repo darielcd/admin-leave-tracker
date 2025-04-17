@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function AdminLeaveTracker() {
   const [entries, setEntries] = useState([]);
@@ -11,6 +11,19 @@ export default function AdminLeaveTracker() {
     hurricaneADEarned: "",
     hurricaneUsed: ""
   });
+
+  // Load entries from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("adminLeaveEntries");
+    if (saved) {
+      setEntries(JSON.parse(saved));
+    }
+  }, []);
+
+  // Save to localStorage on update
+  useEffect(() => {
+    localStorage.setItem("adminLeaveEntries", JSON.stringify(entries));
+  }, [entries]);
 
   const calculateBalances = ({ electionsEarned, electionsUsed, hurricaneADEarned, hurricaneUsed }) => {
     const electionsBalance = (parseFloat(electionsEarned) || 0) - (parseFloat(electionsUsed) || 0);
