@@ -28,7 +28,7 @@ export default function AdminLeaveTracker() {
   const calculateBalances = ({ electionsEarned, electionsUsed, hurricaneADEarned, hurricaneUsed }) => {
     const electionsBalance = (parseFloat(electionsEarned) || 0) - (parseFloat(electionsUsed) || 0);
     const hurricaneBalance = (parseFloat(hurricaneADEarned) || 0) - (parseFloat(hurricaneUsed) || 0);
-    const totalBalance = electionsBalance + hurricaneBalance;
+    const totalBalance = parseFloat(electionsBalance + hurricaneBalance);
     return { electionsBalance, hurricaneBalance, totalBalance };
   };
 
@@ -45,7 +45,13 @@ export default function AdminLeaveTracker() {
     });
   };
 
-  const totalBalanceSum = entries.reduce((sum, e) => sum + (e.totalBalance || 0), 0);
+  const handleDelete = (index) => {
+    const newEntries = [...entries];
+    newEntries.splice(index, 1);
+    setEntries(newEntries);
+  };
+
+  const totalBalanceSum = entries.reduce((sum, e) => sum + (parseFloat(e.totalBalance) || 0), 0);
 
   return (
     <div style={{
@@ -57,9 +63,24 @@ export default function AdminLeaveTracker() {
       fontFamily: "sans-serif",
       flexWrap: "wrap"
     }}>
-      {/* Left column - form */}
+      {/* Left Column - Form */}
       <div style={{ flex: 1, minWidth: "300px" }}>
-        <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "1rem" }}>
+        <div style={{ marginBottom: "2rem" }}>
+          <h1 style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>Dariel Candelario</h1>
+          <p style={{ marginBottom: "0.5rem" }}>Employee ID: E326045</p>
+          <div style={{
+            fontSize: "1.2rem",
+            fontWeight: "bold",
+            padding: "1rem",
+            backgroundColor: "#dff0d8",
+            borderRadius: "4px",
+            color: "#2c662d"
+          }}>
+            ✅ Total Hours Balance: {totalBalanceSum.toFixed(2)}
+          </div>
+        </div>
+
+        <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", marginBottom: "1rem" }}>
           Add Administrative Leave Entry
         </h2>
         {[
@@ -73,7 +94,8 @@ export default function AdminLeaveTracker() {
           <div key={key} style={{ marginBottom: "1rem" }}>
             <label style={{ display: "block", marginBottom: "0.25rem" }}>{label}</label>
             <input
-              type="text"
+              type="number"
+              step="0.01"
               value={form[key]}
               onChange={(e) => setForm({ ...form, [key]: e.target.value })}
               style={{
@@ -101,7 +123,7 @@ export default function AdminLeaveTracker() {
         </button>
       </div>
 
-      {/* Right column - entries and total */}
+      {/* Right Column - Entries */}
       <div style={{ flex: 1, minWidth: "300px" }}>
         <h2 style={{ fontSize: "1.25rem", fontWeight: "bold", marginBottom: "1rem" }}>Entries</h2>
         {entries.length === 0 ? (
@@ -109,27 +131,36 @@ export default function AdminLeaveTracker() {
         ) : (
           <ul>
             {entries.map((entry, index) => (
-              <li key={index} style={{ marginBottom: "1rem", border: "1px solid #ddd", padding: "1rem", borderRadius: "4px" }}>
+              <li key={index} style={{
+                marginBottom: "1rem",
+                border: "1px solid #ddd",
+                padding: "1rem",
+                borderRadius: "4px",
+                backgroundColor: "#f9f9f9"
+              }}>
                 <p><strong>Date:</strong> {entry.date}</p>
                 <p><strong>Excess AD Earned:</strong> {entry.excessADEarned}</p>
                 <p><strong>Elections Balance:</strong> {entry.electionsBalance}</p>
                 <p><strong>Hurricane Balance:</strong> {entry.hurricaneBalance}</p>
                 <p><strong>Total Balance:</strong> {entry.totalBalance}</p>
+                <button
+                  onClick={() => handleDelete(index)}
+                  style={{
+                    marginTop: "0.5rem",
+                    backgroundColor: "#e74c3c",
+                    color: "#fff",
+                    border: "none",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "4px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Delete
+                </button>
               </li>
             ))}
           </ul>
         )}
-
-        <div style={{
-          marginTop: "2rem",
-          fontSize: "1.1rem",
-          fontWeight: "bold",
-          padding: "1rem",
-          backgroundColor: "#f0f0f0",
-          borderRadius: "4px"
-        }}>
-          ✅ Total Hours Balance: {totalBalanceSum.toFixed(2)}
-        </div>
       </div>
     </div>
   );
